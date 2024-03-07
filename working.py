@@ -1,33 +1,16 @@
 from heartrate_monitor import HeartRateMonitor
 import threading
 import time
-from tkinter import Tk, Label, Canvas, simpledialog
-import random
-
-# Function to display confetti in a canvas
-def display_confetti(canvas):
-    colors = ["red", "orange", "yellow", "green", "blue", "purple", "gold", "silver"]
-    
-    # Clear existing confetti
-    canvas.delete("confetti")
-    
-    # Create confetti in the canvas
-    for _ in range(150):
-        x, y = random.randint(0, int(canvas['width'])), random.randint(0, int(canvas['height']))
-        size = random.uniform(1, 4)
-        color = random.choice(colors)
-        canvas.create_oval(x, y, x + size, y + size, fill=color, tags="confetti")
+from tkinter import Tk, Label, simpledialog
 
 # Function to update the heart rate label in the GUI
-def update_heart_rate_label(canvas):
+def update_heart_rate_label():
     while not stop_event.is_set():
         bpm = hrm.bpm
         if bpm > 0:
             heart_rate_label.config(text=f"Heart Rate: {bpm:.2f} bpm")
             if bpm > target_heart_rate:
                 heart_rate_label.config(fg="red")
-                heart_rate_label.config(text=f"Heart Rate: {bpm:.2f} bpm - Target Exceeded!")
-                display_confetti(canvas)
             else:
                 heart_rate_label.config(fg="black")
         else:
@@ -36,15 +19,13 @@ def update_heart_rate_label(canvas):
 
 # Create the main window
 root = Tk()
-root.title("Heart Rate Monitor")
-root.geometry('800x600')  # Set the size of the window
-
-# Set up a canvas for confetti
-confetti_canvas = Canvas(root, width=800, height=600)
-confetti_canvas.pack()
+root.withdraw()  # Hide the main window
 
 # Ask the user for their target heart rate
 target_heart_rate = simpledialog.askinteger("Target Heart Rate", "Enter your target heart rate (bpm):", parent=root)
+
+root.deiconify()  # Show the main window
+root.title("Heart Rate Monitor")
 
 # Create a label to display the heart rate
 heart_rate_label = Label(root, text="Place your finger on the sensor", font=("Arial", 20))
@@ -58,7 +39,7 @@ hrm.start_sensor()
 stop_event = threading.Event()
 
 # Start a thread to update the heart rate label
-update_thread = threading.Thread(target=lambda: update_heart_rate_label(confetti_canvas))
+update_thread = threading.Thread(target=update_heart_rate_label)
 update_thread.start()
 
 # Function to stop the heart rate monitor and close the window
