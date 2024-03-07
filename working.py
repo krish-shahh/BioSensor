@@ -52,5 +52,8 @@ def on_close():
 # Set the on_close function to be called when the window is closed
 root.protocol("WM_DELETE_WINDOW", on_close)
 
+# Bind the Escape key to the on_close function
+root.bind('<Escape>', lambda e: on_close())
+
 # Start the Tkinter event loop
 root.mainloop()
