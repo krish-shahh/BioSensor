@@ -7,7 +7,8 @@ import random
 
 # Initialize Pygame
 pygame.init()
-screen = pygame.display.set_mode((600, 400))
+infoObject = pygame.display.Info()
+screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
 pygame.display.set_caption("Heart Rate Monitor Game")
 font = pygame.font.Font(None, 36)
 text_color = (255, 255, 255)
@@ -32,7 +33,7 @@ confetti_list = []
 
 def create_confetti():
     for _ in range(100):  # Create 100 pieces of confetti
-        x = random.randint(0, 600)
+        x = random.randint(0, infoObject.current_w)
         y = random.randint(-400, 0)
         confetti_list.append(Confetti(x, y))
 
@@ -100,6 +101,9 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        running = False
             draw_interface()
             pygame.time.wait(100)
     except KeyboardInterrupt:
@@ -112,4 +116,5 @@ def main():
         sys.exit()
 
 if __name__ == '__main__':
+    print('Starting Heart Rate Monitor Game')
     main()

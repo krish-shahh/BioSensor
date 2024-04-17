@@ -3,7 +3,8 @@ import random
 
 # Initialize Pygame
 pygame.init()
-screen = pygame.display.set_mode((600, 400))
+infoObject = pygame.display.Info()  # Fetch the current screen resolution
+screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
 pygame.display.set_caption("Confetti Simulation")
 clock = pygame.time.Clock()
 
@@ -23,7 +24,7 @@ class Confetti:
         pygame.draw.rect(screen, self.color, (self.x, self.y, self.size, self.size))
 
 # Create a list to hold confetti particles
-confetti_list = [Confetti(random.randint(0, 600), random.randint(-400, 0)) for _ in range(100)]
+confetti_list = [Confetti(random.randint(0, infoObject.current_w), random.randint(-400, 0)) for _ in range(100)]
 
 def draw():
     screen.fill((0, 0, 0))  # Clear the screen with black
@@ -31,9 +32,9 @@ def draw():
         confetti.fall()
         confetti.draw(screen)
         # Reset confetti when it falls out of view
-        if confetti.y > 400:
+        if confetti.y > infoObject.current_h:  # Use screen height for reset
             confetti.y = random.randint(-50, 0)
-            confetti.x = random.randint(0, 600)
+            confetti.x = random.randint(0, infoObject.current_w)  # Use screen width
     pygame.display.flip()  # Update the full display
 
 def main():
@@ -42,6 +43,9 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:  # Check for ESC key
+                    running = False
 
         draw()
         clock.tick(30)  # Limit to 30 frames per second
