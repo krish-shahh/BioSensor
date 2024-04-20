@@ -29,17 +29,17 @@ def buzzer_off():
 
 try:
     while True:
-        if GPIO.input(17) == GPIO.LOW:  # Check if increase button is pressed
+        if GPIO.input(17) == GPIO.HIGH:  # Check if increase button is pressed
             print("Increase button pressed")
             set_servo_angle(90)  # Set servo to 90 degrees
             time.sleep(0.3)  # Debouncing delay
 
-        if GPIO.input(27) == GPIO.LOW:  # Check if decrease button is pressed
+        if GPIO.input(27) == GPIO.HIGH:  # Check if decrease button is pressed
             print("Decrease button pressed")
             set_servo_angle(0)  # Reset servo to 0 degrees
             time.sleep(0.3)  # Debouncing delay
 
-        if GPIO.input(22) == GPIO.LOW:  # Check if confirm button is pressed
+        if GPIO.input(22) == GPIO.HIGH:  # Check if confirm button is pressed
             print("Confirm button pressed")
             buzzer_on()
             time.sleep(1)  # Keep buzzer on for 1 second
