@@ -7,9 +7,12 @@ import random
 # Initialize Pygame
 pygame.init()
 infoObject = pygame.display.Info()
-screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+# Set the screen for a vertical layout (height > width)
+screen_width = min(infoObject.current_w, infoObject.current_h)
+screen_height = max(infoObject.current_w, infoObject.current_h)
+screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
 pygame.display.set_caption("Heart Rate Monitor Game")
-font = pygame.font.Font(None, 36)
+font = pygame.font.Font(None, 48)  # Adjusted font size for better readability in vertical layout
 text_color = (255, 255, 255)
 background_color = (0, 0, 0)
 
@@ -32,7 +35,7 @@ confetti_list = []
 
 def create_confetti():
     for _ in range(100):  # Create 100 pieces of confetti
-        x = random.randint(0, infoObject.current_w)
+        x = random.randint(0, screen_width)
         y = random.randint(-400, 0)
         confetti_list.append(Confetti(x, y))
 
@@ -65,7 +68,7 @@ def simulate_heart_rate():
 def draw_interface():
     screen.fill(background_color)
     hr_text = font.render(f"Current Heart Rate: {current_heart_rate} BPM", True, text_color)
-    screen.blit(hr_text, (50, 50))
+    screen.blit(hr_text, (screen_width * 0.05, screen_height * 0.1))  # Position text vertically
     for confetto in confetti_list:
         confetto.fall()
         confetto.draw()
@@ -80,7 +83,7 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                elif event.type == pygame.KEYDOWN:
+                elif event.type is pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         running = False
             draw_interface()
