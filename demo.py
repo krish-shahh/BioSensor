@@ -39,20 +39,23 @@ def create_confetti():
         y = random.randint(-400, 0)
         confetti_list.append(Confetti(x, y))
 
-# GPIO setup for buttons and servo
+# GPIO setup for buttons, servo, and buzzer
 button_increase = 17
 button_decrease = 27
 button_confirm = 22
-servo_pin = 18
+servo_pin = 25  # Updated pin for the servo
+buzzer_pin = 23  # Pin for the buzzer
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(button_increase, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(button_decrease, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(button_confirm, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(servo_pin, GPIO.OUT)
+GPIO.setup(buzzer_pin, GPIO.OUT)
 pwm = GPIO.PWM(servo_pin, 50)  # Set PWM to 50Hz
 pwm.start(0)
+GPIO.output(buzzer_pin, GPIO.LOW)
 
-target_heart_rate = 100
+target_heart_rate = 130
 current_heart_rate = 50  # Start from 50
 
 def simulate_heart_rate():
@@ -64,6 +67,9 @@ def simulate_heart_rate():
     if current_heart_rate >= target_heart_rate and not confetti_list:
         create_confetti()
         pwm.ChangeDutyCycle(12)  # Move servo to indicate success (180 degrees)
+        GPIO.output(buzzer_pin, GPIO.HIGH)  # Activate the buzzer
+        time.sleep(1)  # Buzzer on for 1 second
+        GPIO.output(buzzer_pin, GPIO.LOW)  # Deactivate the buzzer
 
 def draw_interface():
     screen.fill(background_color)
