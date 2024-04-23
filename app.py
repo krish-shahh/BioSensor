@@ -6,8 +6,7 @@ from pygame.locals import *
 
 # Initialize Pygame
 pygame.init()
-screen_info = pygame.display.Info()
-screen = pygame.display.set_mode((screen_info.current_w, screen_info.current_h), FULLSCREEN)
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption('Heart Rate Monitor')
 
 # Define colors
@@ -15,7 +14,8 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
 # Define font
-font = pygame.font.Font(None, 36)
+font_path = pygame.font.match_font('dejavusansmono')
+font = pygame.font.Font(font_path, 36)
 
 # Define the apiKey and Auth token
 apiKey = "grandeurlvcg71200dja0jifadqx7zug"
@@ -27,13 +27,13 @@ def onConnection(state):
     # Print the current state
     print(state)
 
-# Callback function to handle current state
+# Callback function to handle the current state
 def dataHandler(code, res):
     # Display data in GUI
     millis = res["data"]
     text = font.render(f"Millis: {millis}", True, BLACK)
     screen.fill(WHITE)
-    screen.blit(text, (screen_info.current_w // 2 - text.get_width() // 2, screen_info.current_h // 2 - text.get_height() // 2))
+    screen.blit(text, (screen.get_width() // 2 - text.get_width() // 2, screen.get_height() // 2 - text.get_height() // 2))
     pygame.display.flip()
 
 # Init the SDK and get reference to the project
