@@ -175,9 +175,9 @@ def simulate_heart_rate():
             current_heart_rate += increment
             heart_rate_history.append(current_heart_rate)
             if len(heart_rate_history) > 64:  # keep history size managed
-                heart_rate_history.pop(0)
+                heart_rate history.pop(0)
             time.sleep(2)
-        if current_heart_rate >= target_heart_rate:
+        if current_heart_rate >= target_heart rate:
             current_heart_rate = target_heart_rate
             target_reached = True
             activate_hardware()
@@ -186,6 +186,12 @@ def main():
     global heart_rate_set
     running = True
     while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False  # Allow exit with ESC key
         check_buttons()
         draw_interface()
         if heart_rate_set:
